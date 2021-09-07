@@ -1,0 +1,53 @@
+{
+  "name": "smarter-testrail-editor",
+  "version": "0.0.1",
+  "description": "A Google Chrome extension that brings a more comfortable editing experience to TestRail's Markdown editor.",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --config webpack.config.js --mode production",
+    "dev": "webpack --config webpack.config.js --mode development --watch",
+    "test": "npx jest",
+    "fmt": "prettier -w src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ow-hirata/smarter-testrail-editor.git"
+  },
+  "author": "Kazumasa Hirata",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ow-hirata/smarter-testrail-editor/issues"
+  },
+  "homepage": "https://github.com/ow-hirata/smarter-testrail-editor#readme",
+  "engines": {
+    "node": ">=16",
+    "npm": ">=7"
+  },
+  "dependencies": {
+    "@material-ui/core": "4.12.3",
+    "draft-js": "0.11.7",
+    "draft-js-code": "0.3.0",
+    "process": "0.11.10",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "7.15.5",
+    "@babel/preset-env": "7.15.4",
+    "@babel/preset-react": "7.14.5",
+    "@testing-library/jest-dom": "5.14.1",
+    "@testing-library/react": "12.0.0",
+    "babel-loader": "8.2.2",
+    "clean-webpack-plugin": "4.0.0",
+    "copy-webpack-plugin": "9.0.1",
+    "css-loader": "6.2.0",
+    "eslint": "7.32.0",
+    "eslint-config-prettier": "8.3.0",
+    "eslint-plugin-react": "^7.25.1",
+    "jest": "27.1.0",
+    "prettier": "2.3.2",
+    "style-loader": "3.2.1",
+    "webpack": "5.52.0",
+    "webpack-cli": "4.8.0"
+  }
+}
