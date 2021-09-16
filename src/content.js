@@ -58,20 +58,22 @@ const replaceEditor = target => {
 
     // replace original editor with extension editor
     ReactDOM.render(<Editor target={target} />, root)
+
+    return target
 }
 
-document.querySelectorAll('.field-editor').forEach(replaceEditor)
+let editorIds = new Map()
 
-new MutationObserver(mutations => {
-    mutations
-        .filter(m => m.type === 'childList')
-        .filter(m => m.target.nodeName === 'TBODY')
-        .filter(m => m.addedNodes.length > 0)
-        .reduce((ns, m) => ns.concat(...m.addedNodes), [])
-        .filter(n => n.childNodes.length > 0)
-        .reduce((es, n) => es.concat(...n.querySelectorAll('.field-editor')), [])
-        .forEach(replaceEditor)
-}).observe(document.querySelector('#custom_steps_separated_table'), {
+let updateEditorIds = editorIds =>
+    Array.from(document.querySelectorAll('.field-editor'))
+        .map(element => (editorIds.has(element.id) ? element : replaceEditor(element)))
+        .reduce((map, element) => map.set(element.id), new Map())
+
+editorIds = updateEditorIds(editorIds)
+
+new MutationObserver(() => {
+    editorIds = updateEditorIds(editorIds)
+}).observe(document.body, {
     attributes: false,
     childList: true,
     subtree: true,
