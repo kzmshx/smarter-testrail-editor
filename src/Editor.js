@@ -31,7 +31,7 @@ const useStyles = makeStyles({
     }),
 })
 
-export default function Editor({target}) {
+export default function Editor({ target }) {
     const [editorState, setEditorState] = useEditorState(target)
     const classes = useStyles(window.getComputedStyle(target))
 
