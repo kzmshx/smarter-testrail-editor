@@ -1,4 +1,3 @@
-const webpack = require('webpack')
 const path = require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
@@ -33,9 +32,6 @@ module.exports = {
         new CleanWebpackPlugin(),
         new CopyPlugin({
             patterns: [{ from: '.', to: '../', context: 'public' }],
-        }),
-        new webpack.ProvidePlugin({
-            process: 'process',
         }),
     ],
 }
