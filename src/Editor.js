@@ -31,7 +31,7 @@ const useStyles = makeStyles({
     }),
 })
 
-export default function Editor({ target }) {
+export default function Editor({ target, id }) {
     const [editorState, setEditorState] = useEditorState(target)
     const classes = useStyles(window.getComputedStyle(target))
 
@@ -78,7 +78,7 @@ export default function Editor({ target }) {
     }, [editorState])
 
     return (
-        <div className={classes.editor} onKeyUp={e => e.stopPropagation()} onPaste={e => e.stopPropagation()}>
+        <div id={id} className={classes.editor} onKeyUp={e => e.stopPropagation()} onPaste={e => e.stopPropagation()}>
             <DraftEditor
                 editorState={editorState}
                 onChange={setEditorState}

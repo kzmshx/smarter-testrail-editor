@@ -2,6 +2,8 @@ import React from 'react'
 import * as ReactDOM from 'react-dom'
 import Editor from './Editor'
 
+const extEditorId = id => `smarter-testrail-editor-${id}`
+
 const replaceEditor = target => {
     const root = document.createElement('div')
     target.parentNode.prepend(root)
@@ -57,22 +59,24 @@ const replaceEditor = target => {
     })
 
     // replace original editor with extension editor
-    ReactDOM.render(<Editor target={target} />, root)
+    ReactDOM.render(<Editor target={target} id={extEditorId(target.id)} />, root)
 
     return target
 }
 
-let editorIds = new Map()
+let editors = new Map()
 
-let updateEditorIds = editorIds =>
-    Array.from(document.querySelectorAll('.field-editor'))
-        .map(element => (editorIds.has(element.id) ? element : replaceEditor(element)))
-        .reduce((map, element) => map.set(element.id), new Map())
+let updateEditors = editors =>
+    new Map(
+        Array.from(document.querySelectorAll('.field-editor'))
+            .map(element => (editors.get(element.id) ? element : replaceEditor(element)))
+            .map(element => [element.id, document.getElementById(extEditorId(element.id))])
+    )
 
-editorIds = updateEditorIds(editorIds)
+editors = updateEditors(editors)
 
 new MutationObserver(() => {
-    editorIds = updateEditorIds(editorIds)
+    editors = updateEditors(editors)
 }).observe(document.body, {
     attributes: false,
     childList: true,
