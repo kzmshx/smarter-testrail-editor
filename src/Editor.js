@@ -18,7 +18,6 @@ const useEditorState = target => {
 
 const useStyles = makeStyles({
     editor: props => ({
-        height: props.height,
         width: props.width,
         minHeight: props.minHeight,
         margin: props.margin,
