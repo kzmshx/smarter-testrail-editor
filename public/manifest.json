@@ -3,6 +3,11 @@
   "name": "smarter-testrail-editor",
   "description": "A Google Chrome extension that brings a more comfortable editing experience to TestRail's Markdown editor.",
   "version": "0.0.2",
+  "icons": {
+    "16": "images/logo_16.png",
+    "48": "images/logo_48.png",
+    "128": "images/logo_128.png"
+  },
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self';"
   },
