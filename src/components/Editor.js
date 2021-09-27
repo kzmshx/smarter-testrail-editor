@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { ContentState, Editor as DraftEditor, EditorState, getDefaultKeyBinding, Modifier } from 'draft-js'
 import CodeUtils from 'draft-js-code'
 import { makeStyles } from '@material-ui/core'
-import { ContentUpdateByExtensionEditorEvent } from '../event'
+import { ContentUpdateByExtensionEditorEvent } from '../event-dispatcher'
 
 const useStyles = makeStyles({
     editor: props => ({

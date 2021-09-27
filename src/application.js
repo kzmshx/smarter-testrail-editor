@@ -1,4 +1,4 @@
-import EventDispatcher from './event-dispatcher'
+import { EventDispatcher } from './event-dispatcher'
 import HostEditorManager from './host-editor-manager'
 import ExtensionEditorManager from './extension-editor-manager'
 

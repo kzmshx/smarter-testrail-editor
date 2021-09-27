@@ -1,4 +1,4 @@
-import { ContentUpdateByHostEditorEvent, ImageAddByHostEditorEvent } from './event'
+import { ContentUpdateByHostEditorEvent, ImageAddByHostEditorEvent } from './event-dispatcher'
 
 const compose =
     (...fns) =>
