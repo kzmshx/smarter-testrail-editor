@@ -9,23 +9,23 @@ const createElement = ({ textContent }) => {
 }
 
 describe('NativeEditorApi', () => {
-    describe('getTextContent', () => {
-        it('should return current content of native editor', () => {
+    describe('getContent', () => {
+        it('returns current contents of the native editor', () => {
             const element = createElement({ textContent: 'current content' })
             const nativeEditorApi = new NativeEditorApi(element, new EventDispatcher())
 
-            expect(nativeEditorApi.getTextContent()).toStrictEqual('current content')
+            expect(nativeEditorApi.getContent()).toStrictEqual('current content')
         })
     })
 
     describe('updateContent', () => {
-        it('should update content of native editor', () => {
+        it('updates the contents of the native editor', () => {
             const element = createElement({ textContent: 'initial content' })
             const nativeEditorApi = new NativeEditorApi(element, new EventDispatcher())
 
-            nativeEditorApi.updateTextContent('updated content')
+            nativeEditorApi.updateContent('updated content')
 
-            expect(nativeEditorApi.getTextContent()).toStrictEqual('updated content')
+            expect(nativeEditorApi.getContent()).toStrictEqual('updated content')
             expect(element.textContent).toStrictEqual('updated content')
         })
     })

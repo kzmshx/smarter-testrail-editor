@@ -40,11 +40,11 @@ export default class NativeEditorApi {
         this.#eventDispatcher = eventDispatcher
     }
 
-    getTextContent() {
+    getContent() {
         return this.#state.textContent
     }
 
-    updateTextContent(newTextContent) {
+    updateContent(newTextContent) {
         this.#state.updateTextContent(newTextContent)
         this.#element.textContent = newTextContent
         this.#element.dispatchEvent(new Event('input'))
