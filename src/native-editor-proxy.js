@@ -44,9 +44,9 @@ export default class NativeEditorProxy {
         return this.#state.textContent
     }
 
-    updateContent(newTextContent) {
-        this.#state.updateTextContent(newTextContent)
-        this.#element.textContent = newTextContent
+    updateContent(content) {
+        this.#state.updateTextContent(content)
+        this.#element.textContent = content
         this.#element.dispatchEvent(new Event('input'))
         this.#element.dispatchEvent(new Event('keyup'))
     }
