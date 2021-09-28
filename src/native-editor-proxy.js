@@ -14,7 +14,7 @@ class State {
     }
 }
 
-export default class NativeEditorApi {
+export default class NativeEditorProxy {
     /**
      * @type {State}
      */

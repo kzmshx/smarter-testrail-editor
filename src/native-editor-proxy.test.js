@@ -1,4 +1,4 @@
-import NativeEditorApi from './native-editor-api'
+import NativeEditorProxy from './native-editor-proxy'
 import { EventDispatcher } from './event-dispatcher'
 
 const createElement = ({ textContent }) => {
@@ -8,11 +8,11 @@ const createElement = ({ textContent }) => {
     return element
 }
 
-describe('NativeEditorApi', () => {
+describe('NativeEditorProxy', () => {
     describe('getContent', () => {
         it('returns current contents of the native editor', () => {
             const element = createElement({ textContent: 'current content' })
-            const nativeEditorApi = new NativeEditorApi(element, new EventDispatcher())
+            const nativeEditorApi = new NativeEditorProxy(element, new EventDispatcher())
 
             expect(nativeEditorApi.getContent()).toStrictEqual('current content')
         })
@@ -21,7 +21,7 @@ describe('NativeEditorApi', () => {
     describe('updateContent', () => {
         it('updates the contents of the native editor', () => {
             const element = createElement({ textContent: 'initial content' })
-            const nativeEditorApi = new NativeEditorApi(element, new EventDispatcher())
+            const nativeEditorApi = new NativeEditorProxy(element, new EventDispatcher())
 
             nativeEditorApi.updateContent('updated content')
 
@@ -33,7 +33,7 @@ describe('NativeEditorApi', () => {
     describe('add and remove event listener, and dispatch event', () => {
         it('should run listeners on event dispatched', () => {
             const element = createElement({ textContent: 'initial content' })
-            const nativeEditorApi = new NativeEditorApi(element, new EventDispatcher())
+            const nativeEditorApi = new NativeEditorProxy(element, new EventDispatcher())
 
             const results = []
             const handleTestEvent = event => results.push(event.type)
