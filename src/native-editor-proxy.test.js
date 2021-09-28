@@ -8,6 +8,8 @@ const createElement = ({ textContent }) => {
     return element
 }
 
+const sleep = timeout => new Promise(resolve => setTimeout(resolve, timeout))
+
 describe('NativeEditorProxy', () => {
     describe('getContent', () => {
         it('returns current contents of the native editor', () => {
@@ -52,6 +54,27 @@ describe('NativeEditorProxy', () => {
             nativeEditorApi.dispatchEvent(new Event('foo'))
 
             expect(results).toStrictEqual(['foo', 'bar'])
+        })
+
+        it('dispatches ContentChangeEvent only when the textContent of the native editor is changed', async () => {
+            const element = createElement({ textContent: 'initial content' })
+            const nativeEditorProxy = new NativeEditorProxy(element, new EventDispatcher())
+
+            const results = []
+            const handleContentChange = event => results.push(event.detail.newContent)
+            nativeEditorProxy.addEventListener('content-change', handleContentChange)
+
+            element.textContent = 'an updated content'
+            await sleep(100)
+            expect(results).toStrictEqual(['an updated content'])
+
+            element.textContent = 'an updated content'
+            await sleep(100)
+            expect(results).toStrictEqual(['an updated content'])
+
+            element.textContent = 'another updated content'
+            await sleep(100)
+            expect(results).toStrictEqual(['an updated content', 'another updated content'])
         })
     })
 })

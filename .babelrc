@@ -1,4 +1,11 @@
 {
+  "env": {
+    "test": {
+      "plugins": [
+        "@babel/plugin-transform-runtime"
+      ]
+    }
+  },
   "presets": [
     [
       "@babel/preset-env",
@@ -7,7 +14,8 @@
           "browsers": [
             "last 2 versions",
             ">= 5% in KR"
-          ]
+          ],
+          "node": "current"
         }
       }
     ],

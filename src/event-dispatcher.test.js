@@ -1,4 +1,5 @@
 import {
+    ContentChangeEvent,
     ContentUpdateByExtensionEditorEvent,
     ContentUpdateByHostEditorEvent,
     Event,
@@ -54,6 +55,15 @@ describe('EventDispatcher', () => {
         dispatcher.dispatch(new Event('some-event'))
 
         expect(results).toStrictEqual(['some-event handled by handler1', 'some-event handled by handler2'])
+    })
+})
+
+describe('ContentChangeEvent', () => {
+    test('can create with expected properties', () => {
+        const event = new ContentChangeEvent({ newContent: 'Some new content' })
+
+        expect(event.type).toStrictEqual('content-change')
+        expect(event.detail.newContent).toStrictEqual('Some new content')
     })
 })
 

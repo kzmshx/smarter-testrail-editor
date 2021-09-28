@@ -57,6 +57,21 @@ class EventDispatcher {
     }
 }
 
+class ContentChangeEvent extends Event {
+    #detail
+
+    constructor({ newContent }) {
+        super('content-change')
+        this.#detail = {
+            newContent,
+        }
+    }
+
+    get detail() {
+        return this.#detail
+    }
+}
+
 class ContentUpdateByExtensionEditorEvent extends Event {
     #detail
 
@@ -105,6 +120,7 @@ class ImageAddByHostEditorEvent extends Event {
 export {
     Event,
     EventDispatcher,
+    ContentChangeEvent,
     ContentUpdateByExtensionEditorEvent,
     ContentUpdateByHostEditorEvent,
     ImageAddByHostEditorEvent,

@@ -1,3 +1,5 @@
+import { ContentChangeEvent } from './event-dispatcher'
+
 export default class NativeEditorProxy {
     /**
      * @type {String}
@@ -22,6 +24,16 @@ export default class NativeEditorProxy {
         this.#content = element.textContent
         this.#element = element
         this.#eventDispatcher = eventDispatcher
+
+        new MutationObserver(() => {
+            const newContent = this.#element.textContent
+            if (newContent == this.#content) {
+                return
+            }
+
+            this.#content = newContent
+            this.dispatchEvent(new ContentChangeEvent({ newContent }))
+        }).observe(this.#element, { attributes: false, characterData: true, childList: true, subtree: true })
     }
 
     getContent() {
