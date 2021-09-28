@@ -1,24 +1,8 @@
-class State {
-    #textContent
-
-    constructor(textContent) {
-        this.#textContent = textContent
-    }
-
-    get textContent() {
-        return this.#textContent
-    }
-
-    updateTextContent(textContent) {
-        this.#textContent = textContent
-    }
-}
-
 export default class NativeEditorProxy {
     /**
-     * @type {State}
+     * @type {String}
      */
-    #state
+    #content
 
     /**
      * @type {HTMLElement}
@@ -35,17 +19,17 @@ export default class NativeEditorProxy {
      * @param {EventDispatcher} eventDispatcher
      */
     constructor(element, eventDispatcher) {
-        this.#state = new State(element.textContent)
+        this.#content = element.textContent
         this.#element = element
         this.#eventDispatcher = eventDispatcher
     }
 
     getContent() {
-        return this.#state.textContent
+        return this.#content
     }
 
     updateContent(content) {
-        this.#state.updateTextContent(content)
+        this.#content = content
         this.#element.textContent = content
         this.#element.dispatchEvent(new Event('input'))
         this.#element.dispatchEvent(new Event('keyup'))
