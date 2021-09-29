@@ -51,6 +51,29 @@ export default class NativeEditorProxy {
         this.#observe()
     }
 
+    getContent() {
+        return this.#content
+    }
+
+    updateContent(content) {
+        this.#content = content
+        this.#element.textContent = content
+        this.#element.dispatchEvent(new Event('input'))
+        this.#element.dispatchEvent(new Event('keyup'))
+    }
+
+    addEventListener(type, listener) {
+        this.#eventDispatcher.addListener(type, listener)
+    }
+
+    removeEventListener(type, listener) {
+        this.#eventDispatcher.removeListener(type, listener)
+    }
+
+    #dispatchEvent(event) {
+        this.#eventDispatcher.dispatch(event)
+    }
+
     #initElement() {}
 
     #observe() {
@@ -63,40 +86,17 @@ export default class NativeEditorProxy {
             }
 
             if (nodesContainsAttachments(childNodes)) {
-                this.dispatchEvent(
+                this.#dispatchEvent(
                     new FileAttachEvent({ markdownLinks: getAttachmentMarkdownUrlsFromNodes(childNodes) })
                 )
                 return
             }
 
             this.#content = newContent
-            this.dispatchEvent(new ContentChangeEvent({ newContent }))
+            this.#dispatchEvent(new ContentChangeEvent({ newContent }))
         }
         const options = { attributes: false, characterData: true, childList: true, subtree: true }
 
         new MutationObserver(handler).observe(this.#element, options)
-    }
-
-    getContent() {
-        return this.#content
-    }
-
-    updateContent(content) {
-        this.#content = content
-        this.#element.textContent = content
-        this.#element.dispatchEvent(new Event('input'))
-        this.#element.dispatchEvent(new Event('keyup'))
-    }
-
-    dispatchEvent(event) {
-        this.#eventDispatcher.dispatch(event)
-    }
-
-    addEventListener(type, listener) {
-        this.#eventDispatcher.addListener(type, listener)
-    }
-
-    removeEventListener(type, listener) {
-        this.#eventDispatcher.removeListener(type, listener)
     }
 }
