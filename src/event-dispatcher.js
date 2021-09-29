@@ -72,6 +72,21 @@ class ContentChangeEvent extends Event {
     }
 }
 
+class FileAttachEvent extends Event {
+    #detail
+
+    constructor({ markdownLinks }) {
+        super('file-attach')
+        this.#detail = {
+            markdownLinks,
+        }
+    }
+
+    get detail() {
+        return this.#detail
+    }
+}
+
 class ContentUpdateByExtensionEditorEvent extends Event {
     #detail
 
@@ -121,6 +136,7 @@ export {
     Event,
     EventDispatcher,
     ContentChangeEvent,
+    FileAttachEvent,
     ContentUpdateByExtensionEditorEvent,
     ContentUpdateByHostEditorEvent,
     ImageAddByHostEditorEvent,

@@ -1,4 +1,26 @@
-import { ContentChangeEvent } from './event-dispatcher'
+import { ContentChangeEvent, FileAttachEvent } from './event-dispatcher'
+
+/**
+ * @param {Node[]} nodes
+ * @return {Element[]}
+ */
+const filterNodesToThoseContainingAttachments = nodes =>
+    nodes.filter(node => node.nodeName === 'DIV').filter(element => element.hasAttribute('data-attachment-id'))
+
+/**
+ * @param {Node[]} nodes
+ * @return {Boolean}
+ */
+const nodesContainsAttachments = nodes => filterNodesToThoseContainingAttachments(nodes).length > 0
+
+/**
+ * @param {Node[]} nodes
+ * @return {String[]}
+ */
+const getAttachmentMarkdownUrlsFromNodes = nodes =>
+    filterNodesToThoseContainingAttachments(nodes)
+        .map(element => element.getAttribute('data-attachment-id'))
+        .map(attachmentId => `![](index.php?/attachments/get/${attachmentId})`)
 
 export default class NativeEditorProxy {
     /**
@@ -25,15 +47,34 @@ export default class NativeEditorProxy {
         this.#element = element
         this.#eventDispatcher = eventDispatcher
 
-        new MutationObserver(() => {
+        this.#initElement()
+        this.#observe()
+    }
+
+    #initElement() {}
+
+    #observe() {
+        const handler = () => {
             const newContent = this.#element.textContent
+            const childNodes = [...this.#element.childNodes]
+
             if (newContent == this.#content) {
+                return
+            }
+
+            if (nodesContainsAttachments(childNodes)) {
+                this.dispatchEvent(
+                    new FileAttachEvent({ markdownLinks: getAttachmentMarkdownUrlsFromNodes(childNodes) })
+                )
                 return
             }
 
             this.#content = newContent
             this.dispatchEvent(new ContentChangeEvent({ newContent }))
-        }).observe(this.#element, { attributes: false, characterData: true, childList: true, subtree: true })
+        }
+        const options = { attributes: false, characterData: true, childList: true, subtree: true }
+
+        new MutationObserver(handler).observe(this.#element, options)
     }
 
     getContent() {
