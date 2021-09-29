@@ -85,12 +85,36 @@ export default class NativeEditorProxy {
      * @param {EventDispatcher} eventDispatcher
      */
     constructor(element, eventDispatcher) {
+        convertImageToMarkdown(element)
+        removeDeleteButton(element)
+        removeWhitespaceSpan(element)
+        removeWhitespaceText(element)
+
         this.#content = element.textContent
         this.#element = element
         this.#eventDispatcher = eventDispatcher
 
-        this.#initElement()
         this.#observe()
+    }
+
+    #observe() {
+        new MutationObserver(() => {
+            const newContent = this.#element.textContent
+            const childNodes = [...this.#element.childNodes]
+
+            if (newContent == this.#content) {
+                return
+            }
+
+            if (nodesContainsAttachments(childNodes)) {
+                const markdownLinks = getAttachmentMarkdownUrlsFromNodes(childNodes)
+                this.#eventDispatcher.dispatch(new FileAttachEvent({ markdownLinks }))
+                return
+            }
+
+            this.#content = newContent
+            this.#eventDispatcher.dispatch(new ContentChangeEvent({ newContent }))
+        }).observe(this.#element, { attributes: false, characterData: true, childList: true, subtree: true })
     }
 
     getContent() {
@@ -110,41 +134,5 @@ export default class NativeEditorProxy {
 
     removeEventListener(type, listener) {
         this.#eventDispatcher.removeListener(type, listener)
-    }
-
-    #initElement() {
-        convertImageToMarkdown(this.#element)
-        removeDeleteButton(this.#element)
-        removeWhitespaceSpan(this.#element)
-        removeWhitespaceText(this.#element)
-        this.#content = this.#element.textContent
-    }
-
-    #dispatchEvent(event) {
-        this.#eventDispatcher.dispatch(event)
-    }
-
-    #observe() {
-        const handler = () => {
-            const newContent = this.#element.textContent
-            const childNodes = [...this.#element.childNodes]
-
-            if (newContent == this.#content) {
-                return
-            }
-
-            if (nodesContainsAttachments(childNodes)) {
-                this.#dispatchEvent(
-                    new FileAttachEvent({ markdownLinks: getAttachmentMarkdownUrlsFromNodes(childNodes) })
-                )
-                return
-            }
-
-            this.#content = newContent
-            this.#dispatchEvent(new ContentChangeEvent({ newContent }))
-        }
-        const options = { attributes: false, characterData: true, childList: true, subtree: true }
-
-        new MutationObserver(handler).observe(this.#element, options)
     }
 }
