@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom'
-import Editor from './components/Editor'
+import _Editor from './components/_Editor'
 import React from 'react'
 
 export default class ExtensionEditorManager {
@@ -34,7 +34,7 @@ export default class ExtensionEditorManager {
         this.#editorElement.parentNode.prepend(mountTarget)
 
         ReactDOM.render(
-            <Editor
+            <_Editor
                 id={this.#extensionEditorId}
                 initialContent={this.#editorElement.textContent}
                 wrapperStyles={window.getComputedStyle(this.#editorElement)}

@@ -135,4 +135,8 @@ export default class NativeEditorProxy {
     removeEventListener(type, listener) {
         this.#eventDispatcher.removeListener(type, listener)
     }
+
+    getStyles() {
+        return window.getComputedStyle(this.#element)
+    }
 }

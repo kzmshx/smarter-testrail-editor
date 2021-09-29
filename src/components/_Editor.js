@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { ContentState, Editor as DraftEditor, EditorState, getDefaultKeyBinding, Modifier } from 'draft-js'
 import CodeUtils from 'draft-js-code'
 import { makeStyles } from '@material-ui/core'
+import { ContentUpdateByExtensionEditorEvent } from '../event-dispatcher'
 
 const useStyles = makeStyles({
     editor: props => ({
@@ -18,16 +19,12 @@ const useStyles = makeStyles({
     }),
 })
 
-/**
- * @param {String} id
- * @param {NativeEditorProxy} nativeEditorProxy
- * @return {JSX.Element}
- */
-export default function Editor({ id, nativeEditorProxy }) {
-    const [editorState, setEditorState] = useState(EditorState.createEmpty())
-    const classes = useStyles(nativeEditorProxy.getStyles())
+export default function _Editor({ id, initialContent, wrapperStyles, dispatcher }) {
+    const [editorState, setEditorState] = useState(EditorState.createWithText(initialContent))
+    const classes = useStyles(wrapperStyles)
 
     const onKeyUpWrapper = e => e.stopPropagation()
+
     const onPasteWrapper = e => e.stopPropagation()
 
     const handleKeyCommand = keyCommand => {
@@ -53,55 +50,51 @@ export default function Editor({ id, nativeEditorProxy }) {
         return getDefaultKeyBinding(event)
     }
 
-    const handleNativeEditorContentChange = event => {
+    const handleContentUpdateByHostEditor = event => {
         const newEditorState = EditorState.push(
             editorState,
             ContentState.createFromText(event.detail.newContent),
-            'content-change-by-native-editor'
+            'content-update-by-host-editor'
         )
         setEditorState(newEditorState)
     }
 
-    const handleNativeEditorFileAttach = event => {
-        const insertedText = event.detail.markdownLinks.join(' ')
-        const fileAttachedContentState = Modifier.replaceText(
+    const handleImageAddByHostEditor = event => {
+        const insertedText = event.detail.imageUrls.map(imageUrl => `![](${imageUrl})`).join(' ')
+        const imageAddedContentState = Modifier.replaceText(
             editorState.getCurrentContent(),
             editorState.getSelection(),
             insertedText
         )
-        const imageAddedEditorState = EditorState.push(
-            editorState,
-            fileAttachedContentState,
-            'file-attach-by-native-editor'
-        )
+        const imageAddedEditorState = EditorState.push(editorState, imageAddedContentState, 'image-add-by-host-editor')
         const newEditorState = EditorState.forceSelection(
             imageAddedEditorState,
-            fileAttachedContentState.getSelectionAfter()
+            imageAddedContentState.getSelectionAfter()
         )
         setEditorState(newEditorState)
     }
 
     useEffect(() => {
-        setEditorState(EditorState.createWithText(nativeEditorProxy.getContent()))
-    }, [])
+        dispatcher.addListener('content-update-by-host-editor', handleContentUpdateByHostEditor)
+
+        return () => {
+            dispatcher.removeListener('content-update-by-host-editor', handleContentUpdateByHostEditor)
+        }
+    })
 
     useEffect(() => {
-        nativeEditorProxy.updateContent(editorState.getCurrentContent().getPlainText())
+        dispatcher.addListener('image-add-by-host-editor', handleImageAddByHostEditor)
+
+        return () => {
+            dispatcher.removeListener('image-add-by-host-editor', handleImageAddByHostEditor)
+        }
+    })
+
+    useEffect(() => {
+        dispatcher.dispatch(
+            new ContentUpdateByExtensionEditorEvent({ newContent: editorState.getCurrentContent().getPlainText() })
+        )
     }, [editorState])
-
-    useEffect(() => {
-        nativeEditorProxy.addEventListener('content-change', handleNativeEditorContentChange)
-        return () => {
-            nativeEditorProxy.removeEventListener('content-change', handleNativeEditorContentChange)
-        }
-    })
-
-    useEffect(() => {
-        nativeEditorProxy.addEventListener('file-attach', handleNativeEditorFileAttach)
-        return () => {
-            nativeEditorProxy.removeEventListener('file-attach', handleNativeEditorFileAttach)
-        }
-    })
 
     return (
         <div id={id} className={classes.editor} onKeyUp={onKeyUpWrapper} onPaste={onPasteWrapper}>
