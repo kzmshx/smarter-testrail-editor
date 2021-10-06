@@ -101,7 +101,13 @@ const Editor = ({ target, id }) => {
     }, [editorState])
 
     return (
-        <div id={id} className={classes.editor} onKeyUp={e => e.stopPropagation()} onPaste={e => e.stopPropagation()}>
+        <div
+            role="presentation"
+            id={id}
+            className={classes.editor}
+            onKeyUp={e => e.stopPropagation()}
+            onPaste={e => e.stopPropagation()}
+        >
             <DraftEditor
                 editorState={editorState}
                 onChange={setEditorState}
