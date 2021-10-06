@@ -14,11 +14,9 @@ const otherThanTextNodeFilter = n => !textNodeFilter(n)
 
 const convertAttachmentNodesToTextNodes = target => {
     for (const node of [...target.childNodes.values()].filter(attachmentImageNodeFilter)) {
-        console.log(node)
         node.parentNode.replaceChild(document.createTextNode(`![](${node.getAttribute('data-attachment-id')})`), node)
     }
     for (const node of [...target.childNodes.values()].filter(otherThanTextNodeFilter)) {
-        console.log(node)
         node.parentNode.removeChild(node)
     }
 }
