@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import { ContentState, Editor as DraftEditor, EditorState, getDefaultKeyBinding, Modifier } from 'draft-js'
 import { makeStyles } from '@material-ui/core'
 import CodeUtils from 'draft-js-code'
@@ -17,7 +18,7 @@ const useStyles = makeStyles({
     }),
 })
 
-export default function Editor({ target, id }) {
+const Editor = ({ target, id }) => {
     const [editorState, setEditorState] = useState(EditorState.createWithText(target.textContent))
     const classes = useStyles(window.getComputedStyle(target))
 
@@ -110,3 +111,10 @@ export default function Editor({ target, id }) {
         </div>
     )
 }
+
+Editor.propTypes = {
+    target: PropTypes.instanceOf(Element).isRequired,
+    id: PropTypes.string.isRequired,
+}
+
+export default Editor
