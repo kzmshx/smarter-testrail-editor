@@ -64,7 +64,7 @@ export default function Editor({ target, id }) {
     }
 
     const handleContentChange = event => {
-        if (event.detail.content == editorState.getCurrentContent().getPlainText()) {
+        if (event.detail.content === editorState.getCurrentContent().getPlainText()) {
             return
         }
         const newContentState = EditorState.createWithText(event.detail.content).getCurrentContent()
