@@ -23,7 +23,6 @@ export default function Editor({ target, id }) {
 
     const handleKeyCommand = keyCommand => {
         if (keyCommand === 'backspace') {
-            // TODO 自分で書き直したい
             const newEditorState = CodeUtils.handleKeyCommand(editorState, keyCommand)
             if (newEditorState) {
                 setEditorState(newEditorState)
@@ -35,12 +34,10 @@ export default function Editor({ target, id }) {
 
     const keyBindingFn = event => {
         if (event.key === 'Enter') {
-            // TODO 自分で書き直したい
             setEditorState(CodeUtils.handleReturn(event, editorState))
             return 'handled'
         }
         if (event.key === 'Tab') {
-            // TODO 自分で書き直したい
             setEditorState(CodeUtils.onTab(event, editorState))
             return 'handled'
         }
