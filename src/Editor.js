@@ -47,7 +47,7 @@ const Editor = ({ target, id }) => {
 
     const handleContentInit = event => {
         const newEditorState = EditorState.push(
-            newEditorState,
+            editorState,
             ContentState.createFromText(event.detail.content),
             'change-block-data'
         )

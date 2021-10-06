@@ -12,9 +12,11 @@ const textNodeFilter = n => n.nodeName === '#text' && !attachmentWhitespaceTextN
 
 const otherThanTextNodeFilter = n => !textNodeFilter(n)
 
+const generateMarkdownForAttachment = n => `![](index.php?/attachments/get/${n.getAttribute('data-attachment-id')})`
+
 const convertAttachmentNodesToTextNodes = target => {
     for (const node of [...target.childNodes.values()].filter(attachmentImageNodeFilter)) {
-        node.parentNode.replaceChild(document.createTextNode(`![](${node.getAttribute('data-attachment-id')})`), node)
+        node.parentNode.replaceChild(document.createTextNode(generateMarkdownForAttachment(node)), node)
     }
     for (const node of [...target.childNodes.values()].filter(otherThanTextNodeFilter)) {
         node.parentNode.removeChild(node)
@@ -51,9 +53,7 @@ const replaceEditor = target => {
                 })
             )
         } else if (attachments.length > 0) {
-            const markdownLinks = attachments
-                .map(node => node.getAttribute('data-attachment-id'))
-                .map(attachmentId => `![](index.php?/attachments/get/${attachmentId})`)
+            const markdownLinks = attachments.map(generateMarkdownForAttachment)
             if (markdownLinks.length > 0) {
                 target.dispatchEvent(
                     new CustomEvent('image-add', {
