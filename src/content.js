@@ -23,12 +23,6 @@ const convertAttachmentNodesToTextNodes = target => {
     }
 }
 
-const extractAttachmentNodes = nodes =>
-    nodes.filter(n => n.nodeName === 'DIV').filter(n => n.classList.contains('attachment-list-item'))
-
-const extractTextNodes = nodes =>
-    nodes.filter(n => n.nodeName === '#text').filter(n => n.textContent !== String.fromCharCode(160))
-
 const replaceEditor = target => {
     const root = document.createElement('div')
     target.parentNode.prepend(root)
