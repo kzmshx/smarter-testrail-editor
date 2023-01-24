@@ -1,0 +1,13 @@
+name: Qodana - JS
+on: [ pull_request, workflow_dispatch ]
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run Qodana Scan
+        uses: JetBrains/qodana-action@v2022.3.0
+        with:
+          args: |
+            --clear-cache
